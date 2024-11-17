@@ -1,0 +1,1537 @@
+{
+  "name": "Create-Issue-Linear-Slack",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f3a4ec3d-7cce-4971-ba0a-5122d9946921",
+              "leftValue": "={{ $if(!$json.isThreadMessage && $json.text.toLowerCase().startsWith(\"create issue\") && $json.text.split(\" \").last().toNumber() < 5, true, false) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -340,
+        -60
+      ],
+      "id": "3fd48994-5ed7-4207-8813-07dc3a04e8ca",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "teamId": "b363ba5b-ade1-42d9-8ed6-00cffd184e78",
+        "title": "={{ $json.issue_title }}",
+        "additionalFields": {
+          "priorityId": "={{ $json.priority.toNumber() }}"
+        }
+      },
+      "type": "n8n-nodes-base.linear",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -360
+      ],
+      "id": "3bf8d7ca-900f-44c0-ba33-987e6b8d8f98",
+      "name": "Linear",
+      "credentials": {
+        "linearApi": {
+          "id": "BxuzQBISrX336QTu",
+          "name": "LinearAPI-Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "573683a5-537d-4d42-8ddb-19f21aa13963",
+              "name": "client_msg_id",
+              "value": "={{ $json.client_msg_id }}",
+              "type": "string"
+            },
+            {
+              "id": "dd95ed42-b6a3-48a3-91fa-898a84a8d60d",
+              "name": "priority",
+              "value": "={{ $json.text.split(\" \").last().toNumber() }}",
+              "type": "string"
+            },
+            {
+              "id": "399c82e3-081c-48cb-bbda-61d399530ac7",
+              "name": "issue_title",
+              "value": "={{ $json.text.split(\" \").slice(2,3).first().toLowerCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "5a4d3ade-7dda-4fff-aec2-40251e1438cf",
+              "name": "client_msg_id",
+              "value": "={{ $json.client_msg_id }}",
+              "type": "string"
+            },
+            {
+              "id": "86057abe-1de3-4dd3-9cf4-3bf997aba8a7",
+              "name": "ts",
+              "value": "={{ $json.parent_message_ts }}",
+              "type": "string"
+            },
+            {
+              "id": "56c6aef8-3f2c-41df-addd-c3ee66d4a8d8",
+              "name": "user",
+              "value": "={{ $json.user }}",
+              "type": "string"
+            },
+            {
+              "id": "df300aeb-9d64-4155-a78b-7a006853d095",
+              "name": "slack-channel",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -180,
+        -220
+      ],
+      "id": "fb5d0d3f-4559-4825-9f62-3abdaecc6bbe",
+      "name": "Get Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dca480f7-c72a-4fcc-be75-78f5d922db3d",
+              "name": "issue_url",
+              "value": "={{ $json.data.issue.url }}",
+              "type": "string"
+            },
+            {
+              "id": "4282454f-818f-4298-8ca7-ba97c6ad1977",
+              "name": "issue_id",
+              "value": "={{ $json.data.issue.id }}",
+              "type": "string"
+            },
+            {
+              "id": "6a5e2a78-22f9-4259-b7ae-9effec4292fe",
+              "name": "issue_identifier",
+              "value": "={{ $json.data.issue.identifier }}",
+              "type": "string"
+            },
+            {
+              "id": "bea84121-b701-4cc6-adfd-0318d49d7681",
+              "name": "parentMessageTS",
+              "value": "={{ $('Get Fields1').item.json.parent_message_ts }}",
+              "type": "string"
+            },
+            {
+              "id": "3ab239d1-f2b6-4bb2-9495-8dce88a2014f",
+              "name": "theradMessageTS",
+              "value": "={{ $('Get Fields1').item.json.parent_message_ts }}",
+              "type": "string"
+            },
+            {
+              "id": "bfd409e5-6d85-452e-a7ae-36c07494a154",
+              "name": "data.issue.identifier",
+              "value": "={{ $json.data.issue.identifier }}",
+              "type": "string"
+            },
+            {
+              "id": "f8e9aa88-96b4-415b-bc51-7ddb297fef8d",
+              "name": "channel",
+              "value": "={{ $('Get Fields1').item.json.channel }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        380,
+        -360
+      ],
+      "id": "34036f07-b9a2-47a3-8a5b-999b0efe30d2",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "issue-mapping",
+          "mode": "list",
+          "cachedResultName": "issue-mapping"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "linear_issue_id": "={{ $json.issue_id }}",
+            "slack_message_id": "={{ $('Get Fields').item.json.client_msg_id }}",
+            "parent_message_ts": "={{ $json.parentMessageTS }}",
+            "thread_message_ts": "={{ $json.parentMessageTS }}",
+            "channel": "={{ $json.channel }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "linear_issue_id",
+              "displayName": "linear_issue_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "slack_message_id",
+              "displayName": "slack_message_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "parent_message_ts",
+              "displayName": "parent_message_ts",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "thread_message_ts",
+              "displayName": "thread_message_ts",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "channel",
+              "displayName": "channel",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        600,
+        -360
+      ],
+      "id": "7c0ac532-9a95-438d-86e2-f1890855ac89",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "kg4KmbPuF7LmdGqU",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "trigger": [
+          "any_event"
+        ],
+        "watchWorkspace": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        -60
+      ],
+      "id": "f315e936-f60b-4810-8b2b-3582c8fedf64",
+      "name": "Slack Trigger",
+      "webhookId": "4eb6bef4-fa67-48be-a531-72554f500ca6",
+      "credentials": {
+        "slackApi": {
+          "id": "pldoF2hwFU1rulZu",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b428e528-22d8-4a59-aa16-ab606869b43f",
+              "name": "client_msg_id",
+              "value": "={{ $json.client_msg_id }}",
+              "type": "string"
+            },
+            {
+              "id": "d4c1e6d5-21de-4fc4-a3c4-57d75ee63fc0",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "a211c934-7248-4012-8dca-13894f7fa2e5",
+              "name": "parent_message_ts",
+              "value": "={{ $json.ts }}",
+              "type": "string"
+            },
+            {
+              "id": "7fd2c3f9-4f06-4812-85a5-d3e8a6d47349",
+              "name": "channel",
+              "value": "={{ $json.channel }}",
+              "type": "string"
+            },
+            {
+              "id": "ee0be8e1-2a05-4525-bc2c-f6d0128bcf44",
+              "name": "isThreadMessage",
+              "value": "={{ $if($json.thread_ts.isNotEmpty(), true, false) }}",
+              "type": "boolean"
+            },
+            {
+              "id": "d2a444dc-ca85-4a23-8519-f7411ef877bc",
+              "name": "threadTS",
+              "value": "={{ $json.thread_ts }}",
+              "type": "string"
+            },
+            {
+              "id": "07c26a0a-6cd4-46b7-aa1b-81662ce85ca6",
+              "name": "user",
+              "value": "={{ $json.user }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -580,
+        -60
+      ],
+      "id": "93d76271-fef2-4329-a2ff-6f912d6e81b2",
+      "name": "Get Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "issue-mapping",
+          "mode": "list",
+          "cachedResultName": "issue-mapping"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Postgres').item.json.id }}",
+            "thread_message_ts": "={{ $json.message.ts }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "linear_issue_id",
+              "displayName": "linear_issue_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "slack_message_id",
+              "displayName": "slack_message_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "parent_message_ts",
+              "displayName": "parent_message_ts",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "thread_message_ts",
+              "displayName": "thread_message_ts",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1040,
+        -360
+      ],
+      "id": "42d40516-2f2a-46f5-8ca5-8796c115b83a",
+      "name": "Update Latest TS",
+      "credentials": {
+        "postgres": {
+          "id": "kg4KmbPuF7LmdGqU",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "faa239e4-c75f-4aec-8336-9532a68ea254",
+              "leftValue": "={{ $json.isThreadMessage }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -180,
+        120
+      ],
+      "id": "939faefa-2589-400f-b9a8-bc0096ced8c0",
+      "name": "If Thread Message"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        40,
+        380
+      ],
+      "id": "a968ba48-16f9-4837-bdb3-5cf9c872aac5",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "url": "https://slack.com/api/conversations.history",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "channel",
+              "value": "={{ $('Get Fields1').item.json.channel }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        100,
+        100
+      ],
+      "id": "ec97a4c1-e2a4-426d-ab07-e2ad59d7d98a",
+      "name": "HTTP Request1",
+      "credentials": {
+        "slackApi": {
+          "id": "pldoF2hwFU1rulZu",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0f934dbf-ec45-4dc6-a8d4-85fe19aec115",
+              "name": "parentClientMessageId",
+              "value": "={{ $json.messages[0].client_msg_id }}",
+              "type": "string"
+            },
+            {
+              "id": "ac0b2d4c-1e5b-4ac9-9df1-e7fb698c1d73",
+              "name": "post-comment-mutation",
+              "value": "mutation CommentCreate { commentCreate(input: { body: \\\"sasasas\\\", issueId: \\\"asasasasas\\\" }) { comment { id issue { id } body createdAt editedAt url user { name isMe id email displayName } } } }",
+              "type": "string"
+            },
+            {
+              "id": "d6afad42-7d41-4c3a-8ea5-08ab0bf52b1f",
+              "name": "linear_api_url",
+              "value": "https://api.linear.app/graphql",
+              "type": "string"
+            },
+            {
+              "id": "f0223763-f9f4-4b9b-b195-1a6837a86c5b",
+              "name": "comment",
+              "value": "={{ $('Get Fields1').item.json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        100
+      ],
+      "id": "f7941547-d8fb-4b48-ab75-3bfe48ff6cfd",
+      "name": "Collect-Channel-Mapping"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "issue-mapping",
+          "mode": "list",
+          "cachedResultName": "issue-mapping"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
+            {
+              "column": "slack_message_id",
+              "value": "={{ $json.parentClientMessageId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        520,
+        100
+      ],
+      "id": "173323e7-ad60-4c4d-a054-72203b989caa",
+      "name": "Get Channel Mapping",
+      "credentials": {
+        "postgres": {
+          "id": "kg4KmbPuF7LmdGqU",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        -100
+      ],
+      "id": "516de387-4e5b-48f4-888b-2255c9090770",
+      "name": "No Operation, do nothing1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "issue-mapping",
+          "mode": "list",
+          "cachedResultName": "issue-mapping"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get Channel Mapping').item.json.id }}",
+            "thread_message_ts": "={{ $('Get Fields1').item.json.threadTS }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "linear_issue_id",
+              "displayName": "linear_issue_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "slack_message_id",
+              "displayName": "slack_message_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "parent_message_ts",
+              "displayName": "parent_message_ts",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "thread_message_ts",
+              "displayName": "thread_message_ts",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        940,
+        100
+      ],
+      "id": "c95e0c80-94f5-46ca-a89a-238c727c4214",
+      "name": "Update Latest TS2",
+      "credentials": {
+        "postgres": {
+          "id": "kg4KmbPuF7LmdGqU",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "0568d1a8-c72f-4202-b775-07957e6f3703",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        680
+      ],
+      "id": "2a7c29d6-bf02-4757-b35b-4ede7b97fa69",
+      "name": "Webhook",
+      "webhookId": "0568d1a8-c72f-4202-b775-07957e6f3703"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "issue-mapping",
+          "mode": "list",
+          "cachedResultName": "issue-mapping"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
+            {
+              "column": "linear_issue_id",
+              "value": "={{ $json.issueId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -440,
+        680
+      ],
+      "id": "6b56b936-e8bf-4b45-885f-aeaef8a4e271",
+      "name": "Get Channel Mapping1",
+      "credentials": {
+        "postgres": {
+          "id": "kg4KmbPuF7LmdGqU",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "issue-mapping",
+          "mode": "list",
+          "cachedResultName": "issue-mapping"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get Channel Mapping1').item.json.id }}",
+            "thread_message_ts": "={{ $json.message.ts }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "linear_issue_id",
+              "displayName": "linear_issue_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "slack_message_id",
+              "displayName": "slack_message_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "parent_message_ts",
+              "displayName": "parent_message_ts",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "thread_message_ts",
+              "displayName": "thread_message_ts",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        460,
+        680
+      ],
+      "id": "c908f35b-817b-4fc2-899b-0ad9aa5cddb8",
+      "name": "Update Latest TS3",
+      "credentials": {
+        "postgres": {
+          "id": "kg4KmbPuF7LmdGqU",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "84d252f5-639e-4d1a-aa9e-e16ac1734356",
+              "name": "body.actor",
+              "value": "={{ $json.body.actor }}",
+              "type": "object"
+            },
+            {
+              "id": "e459e734-17f5-42d7-93a6-1b5507cc55b3",
+              "name": "commented_at",
+              "value": "={{ $json.body.data.createdAt }}",
+              "type": "string"
+            },
+            {
+              "id": "e3eb45f7-8ce4-4274-9470-d391d8a518ec",
+              "name": "issueId",
+              "value": "={{ $json.body.data.issueId }}",
+              "type": "string"
+            },
+            {
+              "id": "2b02a156-eb29-4632-8a94-47b4487fb7fe",
+              "name": "user_email",
+              "value": "={{ $json.body.actor.email }}",
+              "type": "string"
+            },
+            {
+              "id": "d2ab074d-8afa-4d23-b2c4-b9b4b16dde6d",
+              "name": "comment_url",
+              "value": "={{ $json.body.url }}",
+              "type": "string"
+            },
+            {
+              "id": "b9bc01ee-7050-4e01-89ac-39aa8da76dfe",
+              "name": "comment_body",
+              "value": "={{ $json.body.data.body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -620,
+        680
+      ],
+      "id": "ec6b813d-1d3f-434b-bb1d-723e8af76230",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5a411e05-7cdc-478d-b047-aea38a470086",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -220,
+        680
+      ],
+      "id": "a414dd8e-bbc7-45cb-8d0a-8054dd8f6601",
+      "name": "If1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        320,
+        960
+      ],
+      "id": "68fd8973-3b4f-4dd9-920b-c1a9ff06e8f1",
+      "name": "No Operation, do nothing2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://slack.com/api/chat.postMessage",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "channel",
+              "value": "={{ $('Get Fields1').item.json.channel }}"
+            },
+            {
+              "name": "=text",
+              "value": "=:ticket created:\n{{ $('Edit Fields').item.json.issue_url }}\n: Ticket Idetifier: {{ $('Edit Fields').item.json.data.issue.identifier }}"
+            },
+            {
+              "name": "thread_ts",
+              "value": "={{ $('Edit Fields').item.json.theradMessageTS }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        -360
+      ],
+      "id": "5f6315be-51e4-42ad-933f-7955fb237355",
+      "name": "Reply in Slack Thread",
+      "credentials": {
+        "slackApi": {
+          "id": "pldoF2hwFU1rulZu",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://slack.com/api/chat.postMessage",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "channel",
+              "value": "={{ $('Get Channel Mapping1').item.json.channel }}"
+            },
+            {
+              "name": "=text",
+              "value": "=Reply from: **{{ $('Edit Fields1').item.json.body.actor.name }}: **\n{{ $('Edit Fields1').item.json.comment_body }}\n: Ticket Idetifier: {{ $json.data.issue.identifier }}\nComment-url: {{ $json.data.issue.url }}"
+            },
+            {
+              "name": "thread_ts",
+              "value": "={{ $('Get Channel Mapping1').item.json.thread_message_ts }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        680
+      ],
+      "id": "2dd86784-49ff-42d8-a75e-ee25846c5009",
+      "name": "Reply in slack thread",
+      "credentials": {
+        "slackApi": {
+          "id": "pldoF2hwFU1rulZu",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "GET",
+        "endpoint": "https://api.linear.app/graphql",
+        "query": "=query Issue {\n  issue(id:\"{{ $json.id }}\") {\n    id\n    title\n    url\n    identifier\n  }\n}"
+      },
+      "type": "n8n-nodes-base.graphql",
+      "typeVersion": 1,
+      "position": [
+        200,
+        -360
+      ],
+      "id": "7f1b9b33-3496-4f35-b77c-f424aa29d9e1",
+      "name": "Get-Extra-Issue-Info",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "d1Hi9ElwM4XT8nTQ",
+          "name": "Linear-API-Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "endpoint": "=https://api.linear.app/graphql",
+        "requestFormat": "json",
+        "query": "=mutation CommentCreate($input:CommentCreateInput!) {\n  commentCreate(input: $input) {\n    comment {\n      id\n      createdAt\n      editedAt\n      url\n      user {\n        name\n        email\n        isMe\n        displayName\n      }\n    }\n  }\n}",
+        "variables": "={\n  \"input\": {\n    \"body\":\"{{ $('Collect-Channel-Mapping').item.json.comment }}\",\n    \"issueId\":\"{{ $json.linear_issue_id }}\"\n  }\n}",
+        "operationName": "CommentCreate"
+      },
+      "type": "n8n-nodes-base.graphql",
+      "typeVersion": 1,
+      "position": [
+        720,
+        100
+      ],
+      "id": "c2fd9794-c7b5-471c-8226-258f3ee9239d",
+      "name": "Post-Comment-In-Thread",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "d1Hi9ElwM4XT8nTQ",
+          "name": "Linear-API-Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "GET",
+        "endpoint": "https://api.linear.app/graphql",
+        "query": "=query Issue {\n  issue(id:\"{{ $json.linear_issue_id }}\") {\n    id\n    title\n    url\n    identifier\n  }\n}"
+      },
+      "type": "n8n-nodes-base.graphql",
+      "typeVersion": 1,
+      "position": [
+        20,
+        680
+      ],
+      "id": "b91f625c-abcc-4ac3-a39e-e9b994efca07",
+      "name": "Get-Extra-Issue-Info1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "d1Hi9ElwM4XT8nTQ",
+          "name": "Linear-API-Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Listening to the event getting triggered in Slack Channel\n**Storing required fields**\n\n**If message starts with create issue <issue_name_here> <priority_here> then create issue in linear**",
+        "height": 440,
+        "width": 440,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -860,
+        -280
+      ],
+      "id": "3a7ada30-bdf4-4a8f-a4dd-1c371dfcc079",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Creating the issue in linear \n**After creating the issue in linear, collecting the extra info based on issue id from linear API**",
+        "height": 360,
+        "width": 380,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -500
+      ],
+      "id": "f7ed70e2-07a5-456e-8d08-d3d6201470a2",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Adding Result in PostgreSQL DB\n**- Creating the mapping of Message ID and Issue ID to keep the track of Messages**\n**- Storing the latest time-stamp of message created, as it is helpful in reply in thread**",
+        "height": 360,
+        "width": 720,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        540,
+        -500
+      ],
+      "id": "056a611c-83c6-4ee6-a743-a4cf377214db",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Posting the comment in linear Issue\n**When there is reply in thread, then marking that reply as comment in linear issue.**",
+        "height": 360,
+        "width": 440,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -40
+      ],
+      "id": "44df6f2a-0652-48e6-8936-601a8cd6c611",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Adding the comment\n**Keep the latest time stamp of is must**",
+        "height": 360,
+        "width": 440,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        660,
+        -40
+      ],
+      "id": "71c45507-396f-4780-9fbb-6edaa6172d28",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Listening Events From the linear\n**When comment is added in the linear issue, adding as reply in slack message by using mapping from db**",
+        "height": 500,
+        "width": 600,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        480
+      ],
+      "id": "9bbaad2a-e9a6-4611-8e45-3180e3fa9581",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Keeping the track of latest thread TS",
+        "height": 400,
+        "width": 520,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        180,
+        540
+      ],
+      "id": "d9d6efd8-82e3-46e3-91eb-6db16f8eb1f1",
+      "name": "Sticky Note6"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Get Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If Thread Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Linear": {
+      "main": [
+        [
+          {
+            "node": "Get-Extra-Issue-Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Fields": {
+      "main": [
+        [
+          {
+            "node": "Linear",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Reply in Slack Thread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Fields1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Thread Message": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Collect-Channel-Mapping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect-Channel-Mapping": {
+      "main": [
+        [
+          {
+            "node": "Get Channel Mapping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Channel Mapping": {
+      "main": [
+        [
+          {
+            "node": "Post-Comment-In-Thread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Latest TS": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Latest TS2": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Channel Mapping1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Latest TS3": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Get Channel Mapping1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Get-Extra-Issue-Info1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply in Slack Thread": {
+      "main": [
+        [
+          {
+            "node": "Update Latest TS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply in slack thread": {
+      "main": [
+        [
+          {
+            "node": "Update Latest TS3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get-Extra-Issue-Info": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post-Comment-In-Thread": {
+      "main": [
+        [
+          {
+            "node": "Update Latest TS2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get-Extra-Issue-Info1": {
+      "main": [
+        [
+          {
+            "node": "Reply in slack thread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "091eb73e-cad6-4026-95f8-51af82443c5c",
+  "meta": {
+    "instanceId": "4dfe0fb90225fa16642b3b941f8a418f99995ecca48b3d342267c8503137ca49"
+  },
+  "id": "kxDfvGLqjTKWixNH",
+  "tags": [
+    {
+      "createdAt": "2024-11-13T16:39:01.433Z",
+      "updatedAt": "2024-11-13T16:39:01.433Z",
+      "id": "kP8TXrimfmEShGtX",
+      "name": "Slack"
+    }
+  ]
+}
